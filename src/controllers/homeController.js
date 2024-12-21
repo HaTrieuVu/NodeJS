@@ -26,9 +26,20 @@ let postCRUD = async (req, res) => {
   return res.send("post crud");
 };
 
+let displayGetCRUD = async (req, res) => {
+  try {
+    let data = await CRUDService.getAllUser();
+    return res.render("displayCRUD.ejs", { dataTable: data });
+  } catch (error) {
+    console.error("Error in displayGetCRUD:", error);
+    return res.status(500).send("An error occurred while fetching data.");
+  }
+};
+
 module.exports = {
   getHomePage: getHomePage,
   getAboutPage: getAboutPage,
   getCRUD: getCRUD,
   postCRUD: postCRUD,
+  displayGetCRUD: displayGetCRUD,
 };
