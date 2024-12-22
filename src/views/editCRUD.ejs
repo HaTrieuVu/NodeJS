@@ -1,0 +1,76 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit user</title>
+
+    <!-- Latest compiled and minified CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+    />
+
+    <!-- jQuery library -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
+
+    <!-- Popper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col-12 m-5">Edit User Information</div>
+        <div class="col-6">
+          <form action="/put-crud" method="post">
+            <div class="form-row">
+              <div class="form-group col-6">
+                <label for="">First Name</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="firstName"
+                  value="<%= userInfo.firstName %>"
+                />
+              </div>
+              <div class="form-group col-6">
+                <label for="">Last Name</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="lastName"
+                  value="<%= userInfo.lastName %>"
+                />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-6">
+                <label for="inputAddress">Address</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="address"
+                  value="<%= userInfo.address %>"
+                />
+              </div>
+              <div class="form-group col-6">
+                <label for="">Phone Number</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="phonenumber"
+                  value="<%= userInfo.phoneNumber %>"
+                />
+              </div>
+            </div>
+            <input type="text" name="id" hidden value="<%= userInfo.id %>" />
+
+            <button type="submit" class="btn btn-danger">Update</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

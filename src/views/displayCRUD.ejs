@@ -13,6 +13,30 @@
       border: 1px solid black;
       border-collapse: collapse;
     }
+    .btn-edit {
+      display: block;
+      text-decoration: none;
+      outline: none;
+      border: none;
+      background: rgb(208, 158, 64);
+      height: 25px;
+      width: 60px;
+      margin: 5px 0;
+      color: white;
+      cursor: pointer;
+    }
+    .btn-delete {
+      display: block;
+      text-decoration: none;
+      outline: none;
+      border: none;
+      background: rgb(216, 84, 31);
+      height: 25px;
+      width: 60px;
+      margin: 5px 0;
+      color: white;
+      cursor: pointer;
+    }
   </style>
 
   <body>
@@ -27,6 +51,7 @@
         <th>Phone Number</th>
         <th>Address</th>
         <th>Gender</th>
+        <th>Action</th>
       </tr>
       <% dataTable.forEach(user => { %>
       <tr>
@@ -37,6 +62,12 @@
         <td><%= user.phoneNumber || "N/A" %></td>
         <td><%= user.address || "N/A" %></td>
         <td><%= user.gender === 1 ? "Male" : "Female" %></td>
+        <td>
+          <a href="/edit-crud?id=<%= user.id %>" class="btn-edit" type="button"
+            >Edit</a
+          >
+          <a href="" class="btn-delete" type="button">Delete</a>
+        </td>
       </tr>
       <% }); %>
     </table>
