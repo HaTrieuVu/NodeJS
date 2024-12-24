@@ -1,6 +1,8 @@
 const db = require("../models");
 import bcrypt from "bcryptjs";
 
+const salt = bcrypt.genSaltSync(10);
+
 let handleUserLogin = (email, password) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -81,7 +83,108 @@ let getAllUser = async (userId) => {
     }
 };
 
+let hashUserPassword = (password) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            var hashPassword = await bcrypt.hashSync(password, salt);
+            resolve(hashPassword);
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
+
+let createNewUser = async (data) => {
+    try {
+        let checkEmail = await checkUserEmail(data.email);
+        if (checkEmail === true) {
+            return {
+                errCode: 1,
+                message: "Email đã được sử dụng! Bạn hãy sử dung eamil khác",
+            };
+        }
+        let hashPasswordFromBcrypt = await hashUserPassword(data.password);
+        await db.User.create({
+            email: data.email,
+            password: hashPasswordFromBcrypt,
+            firstName: data.firstName,
+            lastName: data.lastName,
+            address: data.address,
+            phoneNumber: data.phonenumber,
+            gender: data.gender === "1" ? true : false,
+            roleId: data.roleId,
+        });
+
+        return {
+            errCode: 0,
+            message: "Đăng ký thành công!",
+        };
+    } catch (error) {
+        return error;
+    }
+};
+
+let updateUser = async (userData) => {
+    try {
+        if (!userData.id) {
+            return {
+                errCode: 2,
+                message: "Missing required parameters",
+            };
+        }
+        let user = await db.User.findOne({
+            where: { id: userData.id },
+            raw: false,
+        });
+        if (user) {
+            user.firstName = userData.firstName;
+            user.lastName = userData.lastName;
+            user.address = userData.address;
+            user.phoneNumber = userData.phoneNumber;
+
+            await user.save();
+
+            return {
+                errCode: 0,
+                message: "Cập nhật thông tin người dùng thành công!",
+            };
+        } else {
+            return {
+                errCode: 1,
+                message: "Người dùng không tồn tại!",
+            };
+        }
+    } catch (error) {
+        return error;
+    }
+};
+
+let deleteUser = async (userId) => {
+    try {
+        let user = await db.User.findOne({
+            where: { id: userId },
+            raw: false,
+        });
+        if (!user) {
+            return {
+                errCode: 2,
+                message: "Người đùng không tồn tại!",
+            };
+        }
+        await user.destroy();
+        return {
+            errCode: 0,
+            message: "Xóa người dùng thành công!",
+        };
+    } catch (error) {
+        return error;
+    }
+};
+
 module.exports = {
     handleUserLogin: handleUserLogin,
     getAllUser: getAllUser,
+    createNewUser: createNewUser,
+    updateUser: updateUser,
+    deleteUser: deleteUser,
 };
