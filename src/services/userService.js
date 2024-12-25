@@ -102,23 +102,24 @@ let createNewUser = async (data) => {
                 errCode: 1,
                 message: "Email đã được sử dụng! Bạn hãy sử dung eamil khác",
             };
-        }
-        let hashPasswordFromBcrypt = await hashUserPassword(data.password);
-        await db.User.create({
-            email: data.email,
-            password: hashPasswordFromBcrypt,
-            firstName: data.firstName,
-            lastName: data.lastName,
-            address: data.address,
-            phoneNumber: data.phonenumber,
-            gender: data.gender === "1" ? true : false,
-            roleId: data.roleId,
-        });
+        } else {
+            let hashPasswordFromBcrypt = await hashUserPassword(data.password);
+            await db.User.create({
+                email: data.email,
+                password: hashPasswordFromBcrypt,
+                firstName: data.firstName,
+                lastName: data.lastName,
+                address: data.address,
+                phoneNumber: data.phonenumber,
+                gender: data.gender === "1" ? true : false,
+                roleId: data.roleId,
+            });
 
-        return {
-            errCode: 0,
-            message: "Đăng ký thành công!",
-        };
+            return {
+                errCode: 0,
+                message: "Đăng ký thành công!",
+            };
+        }
     } catch (error) {
         return error;
     }
