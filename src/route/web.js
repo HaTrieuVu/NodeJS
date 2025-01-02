@@ -37,6 +37,10 @@ let initWebRoutes = (app) => {
     //-------------------------------------//
     //lay bac si top dau
     router.get("/api/top-doctor-home", doctorController.getTopDoctor);
+    //lấy tất cả bác sĩ
+    router.get("/api/get-all-doctors", doctorController.getAllDoctors);
+    //lưu thông tin bác sĩ
+    router.post("/api/save-info-doctors", doctorController.postInfoDoctors);
 
     return app.use("/", router);
 };
