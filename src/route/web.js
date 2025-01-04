@@ -10,16 +10,10 @@ let initWebRoutes = (app) => {
     router.get("/", homeController.getHomePage);
     router.get("/about", homeController.getAboutPage);
     router.get("/crud", homeController.getCRUD);
-
     router.post("/post-crud", homeController.postCRUD);
-
     router.get("/get-crud", homeController.displayGetCRUD);
-
-    //update
     router.get("/edit-crud", homeController.getEditCRUD);
     router.post("/put-crud", homeController.putEditCRUD);
-
-    //delete
     router.get("/delete-crud", homeController.deleteCRUD);
 
     router.post("/api/login", userController.handleLogin);
@@ -37,10 +31,15 @@ let initWebRoutes = (app) => {
     //-------------------------------------//
     //lay bac si top dau
     router.get("/api/top-doctor-home", doctorController.getTopDoctor);
+
     //lấy tất cả bác sĩ
     router.get("/api/get-all-doctors", doctorController.getAllDoctors);
-    //lưu thông tin bác sĩ
+
+    //lưu thông tin thêm về bác sĩ
     router.post("/api/save-info-doctors", doctorController.postInfoDoctors);
+
+    // lấy thông tin chi tiết của 1 bác sĩ
+    router.get("/api/get-detail-doctor-by-id", doctorController.getDetailDoctorById);
 
     return app.use("/", router);
 };

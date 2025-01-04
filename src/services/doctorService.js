@@ -49,7 +49,7 @@ let saveDetailInfoDoctor = async (inputData) => {
             };
         } else {
             await db.Markdown.create({
-                contentHTML: inputData.contentHTML,
+                contentHTML: inputData.contentHtml,
                 contentMarkdown: inputData.contentMarkdown,
                 description: inputData.description,
                 doctorId: inputData.doctorId,
@@ -64,8 +64,46 @@ let saveDetailInfoDoctor = async (inputData) => {
     }
 };
 
+let getDetailDoctorByIdService = async (inputId) => {
+    try {
+        if (!inputId) {
+            return {
+                errCode: 1,
+                errMessage: "Missing required parameter!",
+            };
+        } else {
+            let data = await db.User.findOne({
+                where: { id: inputId },
+                attributes: { exclude: ["password"] },
+                //include : lấy thông tin của user và include thông tin của user trong bảng Markdown
+                include: [
+                    { model: db.Markdown, attributes: ["description", "contentHTML", "contentMarkdown"] },
+                    { model: db.Allcode, as: "positionData", attributes: ["valueEn", "valueVi"] },
+                ],
+                raw: false,
+                nest: true,
+            });
+
+            //convert anh thanh base64 tra ve client
+            if (data && data.image) {
+                data.image = new Buffer(data.image, "base64").toString("binary");
+            }
+
+            if (!data) data = {};
+
+            return {
+                errCode: 0,
+                data: data,
+            };
+        }
+    } catch (error) {
+        return error;
+    }
+};
+
 module.exports = {
     getTopDoctorHome,
     getAllDoctors,
     saveDetailInfoDoctor,
+    getDetailDoctorByIdService,
 };
