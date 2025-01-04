@@ -42,18 +42,33 @@ let getAllDoctors = async () => {
 
 let saveDetailInfoDoctor = async (inputData) => {
     try {
-        if (!inputData.doctorId || !inputData.contentHtml || !inputData.contentMarkdown) {
+        if (!inputData.doctorId || !inputData.contentHtml || !inputData.contentMarkdown || !inputData.action) {
             return {
                 errCode: 1,
                 errMessage: "Missing parameter!",
             };
         } else {
-            await db.Markdown.create({
-                contentHTML: inputData.contentHtml,
-                contentMarkdown: inputData.contentMarkdown,
-                description: inputData.description,
-                doctorId: inputData.doctorId,
-            });
+            if (inputData.action === "EDIT") {
+                let doctorMarkdown = await db.Markdown.findOne({
+                    where: { doctorId: inputData.doctorId },
+                    raw: false,
+                });
+                if (doctorMarkdown) {
+                    doctorMarkdown.contentHTML = inputData.contentHtml;
+                    doctorMarkdown.contentMarkdown = inputData.contentMarkdown;
+                    doctorMarkdown.description = inputData.description;
+                    doctorMarkdown.updatedAt = new Date();
+
+                    await doctorMarkdown.save();
+                }
+            } else if (inputData.action === "CREATE") {
+                await db.Markdown.create({
+                    contentHTML: inputData.contentHtml,
+                    contentMarkdown: inputData.contentMarkdown,
+                    description: inputData.description,
+                    doctorId: inputData.doctorId,
+                });
+            }
         }
         return {
             errCode: 0,
