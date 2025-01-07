@@ -1,4 +1,10 @@
 const db = require("../models");
+require("dotenv").config();
+
+import _ from "lodash";
+import moment from "moment";
+
+const MAX_NUMBER_SCHEDULE = process.env.MAX_NUMBER_SCHEDULE;
 
 let getTopDoctorHome = async (limit) => {
     try {
@@ -116,9 +122,60 @@ let getDetailDoctorByIdService = async (inputId) => {
     }
 };
 
+let bulkCreateScheduleService = async (data) => {
+    try {
+        if (!data.arrSchedule || !data.doctorId || !data.formatedDate) {
+            return {
+                errCode: 1,
+                errMessage: "Missing required parameter",
+            };
+        } else {
+            let shedule = data.arrSchedule;
+            if (shedule && shedule.length > 0) {
+                shedule = shedule.map((item) => {
+                    item.maxNumber = MAX_NUMBER_SCHEDULE;
+                    return item;
+                });
+            }
+
+            //get all data
+            let existing = await db.Schedule.findAll({
+                where: { doctorId: data.doctorId, date: data.formatedDate },
+                attributes: ["timeType", "date", "doctorId", "maxNumber"],
+                raw: true,
+            });
+
+            //format lai date de so sanh
+            if (existing && existing.length > 0) {
+                existing = existing.map((item) => {
+                    item.date = moment(item.date).format("DD/MM/YYYY");
+                    return item;
+                });
+            }
+
+            //tra ve mang phan tu khac biet (compare different)
+            let toCreate = _.differenceWith(shedule, existing, (a, b) => {
+                return a.timeType === b.timeType && a.date === b.date;
+            });
+
+            if (toCreate && toCreate.length > 0) {
+                await db.Schedule.bulkCreate(toCreate);
+            }
+
+            return {
+                errCode: 0,
+                errMessage: "Tạo lịch khám thành công",
+            };
+        }
+    } catch (error) {
+        return error;
+    }
+};
+
 module.exports = {
     getTopDoctorHome,
     getAllDoctors,
     saveDetailInfoDoctor,
     getDetailDoctorByIdService,
+    bulkCreateScheduleService,
 };

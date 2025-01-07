@@ -41,6 +41,9 @@ let initWebRoutes = (app) => {
     // lấy thông tin chi tiết của 1 bác sĩ
     router.get("/api/get-detail-doctor-by-id", doctorController.getDetailDoctorById);
 
+    //lưu thông tin lịch khám bệnh của bác sĩ
+    router.post("/api/bulk-create-schedule", doctorController.bulkCreateSchedule);
+
     return app.use("/", router);
 };
 module.exports = initWebRoutes;
