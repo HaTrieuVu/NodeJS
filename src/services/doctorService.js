@@ -188,6 +188,9 @@ let getScheduleByDateService = async (doctorId, date) => {
         } else {
             let data = await db.Schedule.findAll({
                 where: { doctorId: doctorId },
+                include: [{ model: db.Allcode, as: "timeTypeData", attributes: ["valueEn", "valueVi"] }],
+                raw: false,
+                nest: true,
             });
 
             const filteredData = data.filter(
