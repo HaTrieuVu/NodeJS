@@ -140,17 +140,19 @@ let bulkCreateScheduleService = async (data) => {
 
             //get all data
             let existing = await db.Schedule.findAll({
-                where: { doctorId: data.doctorId, date: data.formatedDate },
+                where: { doctorId: data.doctorId },
                 attributes: ["timeType", "date", "doctorId", "maxNumber"],
                 raw: true,
             });
 
             //format lai date de so sanh
             if (existing && existing.length > 0) {
-                existing = existing.map((item) => {
-                    item.date = moment(item.date).format("DD/MM/YYYY");
-                    return item;
-                });
+                existing = existing
+                    .map((item) => {
+                        item.date = moment(item.date).format("DD/MM/YYYY");
+                        return item;
+                    })
+                    .filter((item) => item.date === data.formatedDate);
             }
 
             //tra ve mang phan tu khac biet (compare different)
@@ -159,6 +161,10 @@ let bulkCreateScheduleService = async (data) => {
             });
 
             if (toCreate && toCreate.length > 0) {
+                toCreate = toCreate.map((item) => {
+                    item.date = moment(item.date, "DD/MM/YYYY").format("YYYY-MM-DD");
+                    return item;
+                });
                 await db.Schedule.bulkCreate(toCreate);
             }
 
@@ -172,10 +178,41 @@ let bulkCreateScheduleService = async (data) => {
     }
 };
 
+let getScheduleByDateService = async (doctorId, date) => {
+    try {
+        if (!doctorId || !date) {
+            return {
+                errCode: 1,
+                errMessage: "Missing required parameter!",
+            };
+        } else {
+            let data = await db.Schedule.findAll({
+                where: { doctorId: doctorId },
+            });
+
+            const filteredData = data.filter(
+                (item) =>
+                    moment(item.date, "DD/MM/YYYY").isValid() &&
+                    moment(item.date, "DD/MM/YYYY").format("DD/MM/YYYY") === date
+            );
+
+            if (!filteredData) filteredData = [];
+
+            return {
+                errCode: 0,
+                data: filteredData,
+            };
+        }
+    } catch (error) {
+        return error;
+    }
+};
+
 module.exports = {
     getTopDoctorHome,
     getAllDoctors,
     saveDetailInfoDoctor,
     getDetailDoctorByIdService,
     bulkCreateScheduleService,
+    getScheduleByDateService,
 };

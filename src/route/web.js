@@ -44,6 +44,9 @@ let initWebRoutes = (app) => {
     //lưu thông tin lịch khám bệnh của bác sĩ
     router.post("/api/bulk-create-schedule", doctorController.bulkCreateSchedule);
 
+    //lấy lịch khám của bác sĩ theo ngày đc chọn
+    router.get("/api/get-schedule-doctor-by-date", doctorController.getScheduleByDate);
+
     return app.use("/", router);
 };
 module.exports = initWebRoutes;
