@@ -48,7 +48,17 @@ let getAllDoctors = async () => {
 
 let saveDetailInfoDoctor = async (inputData) => {
     try {
-        if (!inputData.doctorId || !inputData.contentHtml || !inputData.contentMarkdown || !inputData.action) {
+        if (
+            !inputData.doctorId ||
+            !inputData.contentHtml ||
+            !inputData.contentMarkdown ||
+            !inputData.action ||
+            !inputData.selectedPrice ||
+            !inputData.selectedPaymemt ||
+            !inputData.selectedProvince ||
+            !inputData.addressClinic ||
+            !inputData.nameClinic
+        ) {
             return {
                 errCode: 1,
                 errMessage: "Missing parameter!",
@@ -73,6 +83,35 @@ let saveDetailInfoDoctor = async (inputData) => {
                     contentMarkdown: inputData.contentMarkdown,
                     description: inputData.description,
                     doctorId: inputData.doctorId,
+                });
+            }
+
+            //upsert to doctor_info table
+            let doctorInfo = await db.Doctor_Infor.findOne({
+                where: { doctorId: inputData.doctorId },
+                raw: false,
+            });
+
+            if (doctorInfo) {
+                //update
+                doctorInfo.priceId = inputData.selectedPrice;
+                doctorInfo.provinceId = inputData.selectedProvince;
+                doctorInfo.paymentId = inputData.selectedPaymemt;
+                doctorInfo.addressClinic = inputData.addressClinic;
+                doctorInfo.nameClinic = inputData.nameClinic;
+                doctorInfo.note = inputData.note ? inputData.note : "";
+
+                await doctorInfo.save();
+            } else {
+                //create
+                await db.Doctor_Infor.create({
+                    doctorId: inputData.doctorId,
+                    priceId: inputData.selectedPrice,
+                    provinceId: inputData.selectedProvince,
+                    paymentId: inputData.selectedPaymemt,
+                    addressClinic: inputData.addressClinic,
+                    nameClinic: inputData.nameClinic,
+                    note: inputData.note ? inputData.note : "",
                 });
             }
         }
