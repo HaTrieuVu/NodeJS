@@ -293,6 +293,51 @@ let getExtraInfoDoctorByIdService = async (doctorId) => {
     }
 };
 
+let getProfileDoctorByIdService = async (doctorId) => {
+    try {
+        if (!doctorId) {
+            return {
+                errCode: 1,
+                errMessage: "Missing required parameter!",
+            };
+        } else {
+            let data = await db.User.findOne({
+                where: { id: doctorId },
+                attributes: { exclude: ["password"] },
+                include: [
+                    { model: db.Markdown, attributes: ["description", "contentHTML", "contentMarkdown"] },
+                    { model: db.Allcode, as: "positionData", attributes: ["valueEn", "valueVi"] },
+                    {
+                        model: db.Doctor_Infor,
+                        attributes: { exclude: ["doctorId", "id"] },
+                        include: [
+                            { model: db.Allcode, as: "priceTypeData", attributes: ["valueEn", "valueVi"] },
+                            { model: db.Allcode, as: "provinceTypeData", attributes: ["valueEn", "valueVi"] },
+                            { model: db.Allcode, as: "paymentTypeData", attributes: ["valueEn", "valueVi"] },
+                        ],
+                    },
+                ],
+                raw: false,
+                nest: true,
+            });
+
+            //convert anh thanh base64 tra ve client
+            if (data && data.image) {
+                data.image = new Buffer(data.image, "base64").toString("binary");
+            }
+
+            if (!data) data = {};
+
+            return {
+                errCode: 0,
+                data: data,
+            };
+        }
+    } catch (error) {
+        return error;
+    }
+};
+
 module.exports = {
     getTopDoctorHome,
     getAllDoctors,
@@ -301,4 +346,5 @@ module.exports = {
     bulkCreateScheduleService,
     getScheduleByDateService,
     getExtraInfoDoctorByIdService,
+    getProfileDoctorByIdService,
 };

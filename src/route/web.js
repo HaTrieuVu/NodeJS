@@ -50,6 +50,9 @@ let initWebRoutes = (app) => {
     //lấy thông tin thêm (giá khám, địa chỉ, ..) của bác sĩ
     router.get("/api/get-extra-info-doctor-by-id", doctorController.getExtraInfoDoctorById);
 
+    // lấy thông tin thêm của bác sĩ cho modal đặt lịch khám
+    router.get("/api/get-profile-doctor-by-id", doctorController.getProfileDoctorById);
+
     return app.use("/", router);
 };
 module.exports = initWebRoutes;
