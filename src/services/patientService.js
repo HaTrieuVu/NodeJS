@@ -1,6 +1,8 @@
 const db = require("../models");
 require("dotenv").config();
 
+import emailService from "./emailService";
+
 let postBookAppointmentService = async (data) => {
     try {
         if (!data.email || !data.doctorId || !data.timeType || !data.date) {
@@ -9,6 +11,15 @@ let postBookAppointmentService = async (data) => {
                 errMessage: "Missing required parameter!",
             };
         } else {
+            // gửi email
+            await emailService.sendSimpleEmail({
+                reciverEmail: data.email,
+                patientName: "Patient - User",
+                time: "9:00 - 10:00, Thứ bảy 11/01/2025",
+                doctorName: "Vũ Hà",
+                redirecLink: "https://www.youtube.com/watch?v=0GL--Adfqhc",
+            });
+
             //upsert patient
             let user = await db.User.findOrCreate({
                 where: { email: data.email },
