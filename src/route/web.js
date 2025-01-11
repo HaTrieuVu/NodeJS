@@ -58,6 +58,9 @@ let initWebRoutes = (app) => {
     // bệnh nhân đặt lịch khám và lưu vào database
     router.post("/api/patient-book-appointment", patientController.postBookAppointment);
 
+    // api xác nhận lịch khám bệnh của bệnh nhân
+    router.post("/api/verify-book-appointment", patientController.postVerifyBookAppointment);
+
     return app.use("/", router);
 };
 module.exports = initWebRoutes;
