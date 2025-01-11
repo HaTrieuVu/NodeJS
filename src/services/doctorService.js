@@ -238,7 +238,10 @@ let getScheduleByDateService = async (doctorId, date) => {
         } else {
             let data = await db.Schedule.findAll({
                 where: { doctorId: doctorId },
-                include: [{ model: db.Allcode, as: "timeTypeData", attributes: ["valueEn", "valueVi"] }],
+                include: [
+                    { model: db.Allcode, as: "timeTypeData", attributes: ["valueEn", "valueVi"] },
+                    { model: db.User, as: "doctorData", attributes: ["firstName", "lastName"] },
+                ],
                 raw: false,
                 nest: true,
             });
