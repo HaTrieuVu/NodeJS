@@ -6,6 +6,30 @@ import moment from "moment";
 
 const MAX_NUMBER_SCHEDULE = process.env.MAX_NUMBER_SCHEDULE;
 
+let checkRequiredFields = (inputData) => {
+    arrFields = [
+        "doctorId",
+        "contentHtml",
+        "contentMarkdown",
+        "action",
+        "selectedPrice",
+        "selectedPaymemt",
+        "selectedProvince",
+        "addressClinic",
+        "nameClinic",
+        "selectedSpecialty",
+    ];
+    let isValid = true;
+    let elment = "";
+    for (let i = 0; i < arrFields.length; i++) {
+        if (!inputData[arrFields[i]]) {
+            (isValid = false), (elment = arrFields[i]);
+            break;
+        }
+    }
+    return { isValid, elment };
+};
+
 let getTopDoctorHome = async (limit) => {
     try {
         let doctors = await db.User.findAll({
@@ -48,20 +72,11 @@ let getAllDoctors = async () => {
 
 let saveDetailInfoDoctor = async (inputData) => {
     try {
-        if (
-            !inputData.doctorId ||
-            !inputData.contentHtml ||
-            !inputData.contentMarkdown ||
-            !inputData.action ||
-            !inputData.selectedPrice ||
-            !inputData.selectedPaymemt ||
-            !inputData.selectedProvince ||
-            !inputData.addressClinic ||
-            !inputData.nameClinic
-        ) {
+        let checkObj = checkRequiredFields(inputData);
+        if (checkObj.isValid === false) {
             return {
                 errCode: 1,
-                errMessage: "Missing parameter!",
+                errMessage: `Missing parameter, ${checkObj.elment}`,
             };
         } else {
             if (inputData.action === "EDIT") {
@@ -100,6 +115,8 @@ let saveDetailInfoDoctor = async (inputData) => {
                 doctorInfo.addressClinic = inputData.addressClinic;
                 doctorInfo.nameClinic = inputData.nameClinic;
                 doctorInfo.note = inputData.note ? inputData.note : "";
+                doctorInfo.specialtyId = inputData.selectedSpecialty;
+                doctorInfo.clinicId = inputData.clinicId ? inputData.clinicId : "";
 
                 await doctorInfo.save();
             } else {
@@ -112,6 +129,8 @@ let saveDetailInfoDoctor = async (inputData) => {
                     addressClinic: inputData.addressClinic,
                     nameClinic: inputData.nameClinic,
                     note: inputData.note ? inputData.note : "",
+                    specialtyId: inputData.selectedSpecialty,
+                    clinicId: inputData.clinicId ? inputData.clinicId : "",
                 });
             }
         }
