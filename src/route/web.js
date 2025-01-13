@@ -65,6 +65,8 @@ let initWebRoutes = (app) => {
     //==========================================
     // api tạo mới chuyên khoa
     router.post("/api/create-new-specialty", specialtyController.createSpecialty);
+    // lấy tất cả chuyên khoa kham bệnh
+    router.get("/api/get-specialty", specialtyController.getAllSpecialty);
 
     return app.use("/", router);
 };
