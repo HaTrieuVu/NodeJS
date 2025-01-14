@@ -18,6 +18,7 @@ let checkRequiredFields = (inputData) => {
         "addressClinic",
         "nameClinic",
         "selectedSpecialty",
+        "selectedClinic",
     ];
     let isValid = true;
     let elment = "";
@@ -117,7 +118,7 @@ let saveDetailInfoDoctor = async (inputData) => {
                 doctorInfo.nameClinic = inputData.nameClinic;
                 doctorInfo.note = inputData.note ? inputData.note : "";
                 doctorInfo.specialtyId = inputData.selectedSpecialty;
-                // doctorInfo.clinicId = inputData.clinicId ? inputData.clinicId : "";
+                doctorInfo.clinicId = inputData.selectedClinic;
 
                 await doctorInfo.save();
             } else {
@@ -131,7 +132,7 @@ let saveDetailInfoDoctor = async (inputData) => {
                     nameClinic: inputData.nameClinic,
                     note: inputData.note ? inputData.note : "",
                     specialtyId: inputData.selectedSpecialty,
-                    // clinicId: inputData.clinicId ? inputData.clinicId : "",
+                    clinicId: inputData.selectedClinic,
                 });
             }
 

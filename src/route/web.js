@@ -72,12 +72,12 @@ let initWebRoutes = (app) => {
     router.get("/api/get-detail-specialty-by-id", specialtyController.getDetailSpecialtyById);
 
     //======================
-    // api tạo mới chuyên khoa
+    // api tạo mới phòng khám
     router.post("/api/create-new-clinic", clinicController.createClinic);
-    // // lấy tất cả chuyên khoa kham bệnh
-    // router.get("/api/get-clinic", specialtyController.getAllSpecialty);
-    // // lấy tất cả bác sĩ của chuyên khoa
-    // router.get("/api/get-detail-clinic-by-id", specialtyController.getDetailSpecialtyById);
+    // lấy tất cả các phòng khám
+    router.get("/api/get-clinic", clinicController.getAllClinic);
+    // lấy tất cả thông tin của phòng khám
+    router.get("/api/get-detail-clinic-by-id", clinicController.getDetailClinicById);
 
     return app.use("/", router);
 };
