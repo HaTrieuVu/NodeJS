@@ -56,6 +56,10 @@ let initWebRoutes = (app) => {
     // lấy thông tin thêm của bác sĩ cho modal đặt lịch khám
     router.get("/api/get-profile-doctor-by-id", doctorController.getProfileDoctorById);
 
+    //===========================
+    // lấy ds bệnh nhân đặt lịch khám của bác sĩ
+    router.get("/api/get-list-patient-for-doctor", doctorController.getListPatientForDoctor);
+
     //=====================================
     // bệnh nhân đặt lịch khám và lưu vào database
     router.post("/api/patient-book-appointment", patientController.postBookAppointment);
