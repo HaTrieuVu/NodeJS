@@ -7,7 +7,7 @@ import moment from "moment";
 const MAX_NUMBER_SCHEDULE = process.env.MAX_NUMBER_SCHEDULE;
 
 let checkRequiredFields = (inputData) => {
-    arrFields = [
+    let arrFields = [
         "doctorId",
         "contentHtml",
         "contentMarkdown",
@@ -106,6 +106,7 @@ let saveDetailInfoDoctor = async (inputData) => {
                 where: { doctorId: inputData.doctorId },
                 raw: false,
             });
+            // console.log(doctorInfo)
 
             if (doctorInfo) {
                 //update
@@ -116,7 +117,7 @@ let saveDetailInfoDoctor = async (inputData) => {
                 doctorInfo.nameClinic = inputData.nameClinic;
                 doctorInfo.note = inputData.note ? inputData.note : "";
                 doctorInfo.specialtyId = inputData.selectedSpecialty;
-                doctorInfo.clinicId = inputData.clinicId ? inputData.clinicId : "";
+                // doctorInfo.clinicId = inputData.clinicId ? inputData.clinicId : "";
 
                 await doctorInfo.save();
             } else {
@@ -130,14 +131,15 @@ let saveDetailInfoDoctor = async (inputData) => {
                     nameClinic: inputData.nameClinic,
                     note: inputData.note ? inputData.note : "",
                     specialtyId: inputData.selectedSpecialty,
-                    clinicId: inputData.clinicId ? inputData.clinicId : "",
+                    // clinicId: inputData.clinicId ? inputData.clinicId : "",
                 });
             }
+
+            return {
+                errCode: 0,
+                errMessage: "Lưu thông tin bác sĩ thành công!",
+            };
         }
-        return {
-            errCode: 0,
-            errMessage: "Lưu thông tin bác sĩ thành công!",
-        };
     } catch (error) {
         return error;
     }
