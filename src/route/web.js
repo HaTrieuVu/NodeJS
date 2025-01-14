@@ -5,6 +5,7 @@ import userController from "../controllers/userController";
 import doctorController from "../controllers/doctorController";
 import patientController from "../controllers/patientController";
 import specialtyController from "../controllers/specialtyController";
+import clinicController from "../controllers//clinicController";
 
 let router = express.Router();
 
@@ -69,6 +70,14 @@ let initWebRoutes = (app) => {
     router.get("/api/get-specialty", specialtyController.getAllSpecialty);
     // lấy tất cả bác sĩ của chuyên khoa
     router.get("/api/get-detail-specialty-by-id", specialtyController.getDetailSpecialtyById);
+
+    //======================
+    // api tạo mới chuyên khoa
+    router.post("/api/create-new-clinic", clinicController.createClinic);
+    // // lấy tất cả chuyên khoa kham bệnh
+    // router.get("/api/get-clinic", specialtyController.getAllSpecialty);
+    // // lấy tất cả bác sĩ của chuyên khoa
+    // router.get("/api/get-detail-clinic-by-id", specialtyController.getDetailSpecialtyById);
 
     return app.use("/", router);
 };
