@@ -60,6 +60,9 @@ let initWebRoutes = (app) => {
     // lấy ds bệnh nhân đặt lịch khám của bác sĩ
     router.get("/api/get-list-patient-for-doctor", doctorController.getListPatientForDoctor);
 
+    // gửi hóa đơn cho bệnh nhân
+    router.post("/api/send-remedy", doctorController.sendRemedy);
+
     //=====================================
     // bệnh nhân đặt lịch khám và lưu vào database
     router.post("/api/patient-book-appointment", patientController.postBookAppointment);
